@@ -141,7 +141,17 @@ class FINS(object):
                          for i in range(0, len(text), item_len)]
                 base = 10 if bcd is True else 16
                 # Converted to integers.
-                return [int(item, base=base) for item in items]
+                integers = []
+                for item in items:
+                    try:
+                        integers.append(int(item, base=base))
+                    except ValueError:
+                        # On error, set the integer to 0.
+                        logger.error(
+                            'Could not convert %s to base %s, setting to 0',
+                            item, base)
+                        integers.append(0)
+                return integers
 
     def memory_area_read_single(self, memory_area_code, address_word,
                                 address_bit=0, bcd=False):

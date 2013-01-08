@@ -242,6 +242,11 @@ class FinsTestCase(unittest.TestCase):
         self.assertEqual(
             [2345, 6789], fins.memory_area_read('B2', 0, num_items=2, bcd=True))
 
+        # Test values in the wrong base. Should be set to 0.
+        mock_send.return_value = '0001' '0002' '000F' '0004'
+        self.assertEqual(
+            [1, 2, 0, 4], fins.memory_area_read('B2', 0, num_items=4, bcd=True))
+
     def test_FINS_memory_area_read_single(self):
         fins = FINS(None)
         mock_send = MagicMock()
