@@ -135,7 +135,6 @@ class FINS(object):
             # ASCII-encoded bytes are two characters long.
             item_len = ITEM_BYTE_SIZE[memory_area_code] * 2
             if num_items * item_len == len(text):
-                logger.debug('Successful memory area read')
                 # Separate items, still strings.
                 items = [text[i:i + item_len]
                          for i in range(0, len(text), item_len)]
@@ -147,8 +146,8 @@ class FINS(object):
                         integers.append(int(item, base=base))
                     except ValueError:
                         # On error, set the integer to 0.
-                        logger.error(
-                            'Could not convert %s to base %s, setting to 0',
+                        logger.warning(
+                            '%s is not a base %s number, setting to 0',
                             item, base)
                         integers.append(0)
                 return integers
@@ -205,7 +204,6 @@ class FINS(object):
         if text is not None:
             try:
                 clock = datetime.strptime(text[:-2], '%y%m%d%H%M%S')
-                logger.debug('Successful clock read')
                 return clock
             except ValueError:
                 pass
@@ -217,7 +215,6 @@ class FINS(object):
         command_text = datetime.strftime('%y%m%d%H%M%S')
         text = self.send(CLOCK_WRITE, command_text)
         if text == '':
-            logger.debug('Successful clock write')
             return True
 
 
