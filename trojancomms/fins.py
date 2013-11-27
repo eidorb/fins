@@ -166,9 +166,11 @@ class FINS(object):
             pass
 
     def memory_area_write(self, memory_area_code, address_word, address_bit=0,
-                          values=[]):
-        """Write integer values from iterable `values` starting at the specified
-        memory location. Returns True on a successful write.
+                          values=[], bcd=False):
+        """Write integer values from iterable `values` starting at the
+        specified memory location.
+
+        Returns True on a successful write.
 
         The memory location is made up of
             `memory_area_code` - representing an area in memory
@@ -178,15 +180,24 @@ class FINS(object):
 
         If `values` is simply an integer (e.g. values=0xFF), then
         `values` will be treated as a single word or bit to be written.
+
+        If `bcd` is True, the values will be converted to a BCD representation
+        before being written. Note, this does not assume the given values are
+        represented as BCD.
         """
         item_bytes = ITEM_BYTE_SIZE[memory_area_code]
+        # Make values a list regardless of whether it is a single value or an
+        # iterable.
         try:
-            data = ''.join(hex_string(value, bytes=item_bytes)
-                           for value in values)
-            num_items = len(values)
+            values = list(values)
         except TypeError:
-            data = hex_string(values, bytes=item_bytes)
-            num_items = 1
+            values = [values]
+        num_items = len(values)
+        # Convert values to a BCD representation if required.
+        if bcd is True:
+            values = (int(str(value), base=16) for value in values)
+        data = ''.join(hex_string(value, bytes=item_bytes)
+                       for value in values)
         command_text = ''.join((memory_area_code,
                                 hex_string(address_word, bytes=2),
                                 hex_string(address_bit),
