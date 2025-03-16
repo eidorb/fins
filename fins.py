@@ -3,6 +3,7 @@ import logging
 from operator import xor
 import re
 import socket
+from functools import reduce
 
 
 logger = logging.getLogger(__name__)

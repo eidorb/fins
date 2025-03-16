@@ -2,7 +2,7 @@ from datetime import datetime
 import socket
 import unittest
 
-from mock import MagicMock, patch
+from unittest.mock import MagicMock, patch
 
 import fins
 from fins import FINS, TCPHostLinkConnection
