@@ -4,9 +4,9 @@ import unittest
 
 from mock import MagicMock, patch
 
-from trojancomms import fins
-from trojancomms.fins import FINS, TCPHostLinkConnection
-from trojancomms.fins import calculate_fcs, create_hostlink_command, \
+import fins
+from fins import FINS, TCPHostLinkConnection
+from fins import calculate_fcs, create_hostlink_command, \
     hex_string, strip_fins_response, strip_hostlink_response
 
 
@@ -88,9 +88,9 @@ class FinsTestCase(unittest.TestCase):
         self.assertIsNone(
             strip_fins_response('00C000020000000000000001010000', '0102'))
 
-    @patch('trojancomms.fins.strip_hostlink_response', return_value='fins')
-    @patch('trojancomms.fins.create_hostlink_command', return_value='hostlink')
-    @patch('trojancomms.fins.socket.create_connection')
+    @patch('fins.strip_hostlink_response', return_value='fins')
+    @patch('fins.create_hostlink_command', return_value='hostlink')
+    @patch('fins.socket.create_connection')
     def test_TCPHostLinkConnection(
             self, mock_create_connection, mock_create_hostlink_command,
             mock_strip_hostlink_response):
@@ -159,7 +159,7 @@ class FinsTestCase(unittest.TestCase):
         mock_socket.close.assert_called_with()
         self.assertIsNone(connection.socket)
 
-    @patch('trojancomms.fins.strip_fins_response')
+    @patch('fins.strip_fins_response')
     def test_FINS_send(self, mock_strip_fins_response):
         connection = MagicMock()
         fins = FINS(connection)
